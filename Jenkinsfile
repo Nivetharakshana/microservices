@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('SCM Checkout'){
             steps {
-            git branch: 'main', url: 'https://github.com/naresh26git/microservices.git'
+            git branch: 'main', url: 'https://github.com/Nivetharakshana/microservices.git'
             sh 'ls'
             }
         }
@@ -57,13 +57,13 @@ pipeline {
                                     -D sonar.projectVersion=1.0-SNAPSHOT \
                                     -D sonar.sources=. \
                                     -D sonar.login=admin \
-                                    -D sonar.password=admin123 \
+                                    -D sonar.password=admin1234 \
                                     -D sonar.projectKey=project \
                                     -D sonar.projectName=wishlist-py \
                                     -D sonar.inclusions=index.py \
                                     -D sonar.sourceEncoding=UTF-8 \
                                     -D sonar.language=python \
-                                    -D sonar.host.url=http://13.232.29.132:9000/"""
+                                    -D sonar.host.url=http://15.206.186.80/:9000/"""
                                 }
                             }
                         }
@@ -76,60 +76,60 @@ pipeline {
                 parallel (
                     'docker login': {
                         withCredentials([string(credentialsId: 'dockerPass', variable: 'dockerPassword')]) {
-                            sh "docker login -u comdevops -p ${dockerPassword}"
+                            sh "docker login -u nivethadev -p ${dockerPassword}"
                         }
                     },
                     'ui-web-app-reactjs': {
                         dir('ui-web-app-reactjs'){
                             sh """
-                            docker build -t comdevops/ui:v1 .
-                            docker push comdevops/ui:v1
-                            docker rmi comdevops/ui:v1
+                            docker build -t nivethadev/ui:v1 .
+                            docker push nivethadev/ui:v1
+                            docker rmi nivethadev/ui:v1
                             """
                         }
                     },
                     'zuul-api-gateway' : {
                         dir('zuul-api-gateway'){
                             sh """
-                            docker build -t comdevops/api:v1 .
-                            docker push comdevops/api:v1
-                            docker rmi comdevops/api:v1
+                            docker build -t nivethadev/api:v1 .
+                            docker push nivethadev/api:v1
+                            docker rmi nivethadev/api:v1
                             """
                         }
                     },
                     'offers-microservice-spring-boot': {
                         dir('offers-microservice-spring-boot'){
                             sh """
-                            docker build -t comdevops/spring:v1 .
-                            docker push comdevops/spring:v1
-                            docker rmi comdevops/spring:v1
+                            docker build -t nivethadev/spring:v1 .
+                            docker push nivethadev/spring:v1
+                            docker rmi nivethadev/spring:v1
                             """
                         }
                     },
                     'shoes-microservice-spring-boot': {
                         dir('shoes-microservice-spring-boot'){
                             sh """
-                            docker build -t comdevops/spring:v2 .
-                            docker push comdevops/spring:v2
-                            docker rmi comdevops/spring:v2
+                            docker build -t nivethadev/spring:v2 .
+                            docker push nivethadev/spring:v2
+                            docker rmi nivethadev/spring:v2
                             """
                         }
                     },
                     'cart-microservice-nodejs': {
                         dir('cart-microservice-nodejs'){
                             sh """
-                            docker build -t comdevops/ui:v2 .
-                            docker push comdevops/ui:v2
-                            docker rmi comdevops/ui:v2
+                            docker build -t nivethadev/ui:v2 .
+                            docker push nivethadev/ui:v2
+                            docker rmi nivethadev/ui:v2
                             """
                         }
                     },
                     'wishlist-microservice-python': {
                         dir('wishlist-microservice-python'){
                             sh """
-                            docker build -t comdevops/python:v1 .
-                            docker push comdevops/python:v1
-                            docker rmi comdevops/python:v1
+                            docker build -t nivethadev/python:v1 .
+                            docker push nivethadev/python:v1
+                            docker rmi nivethadev/python:v1
                             """
                         }
                     }
@@ -142,7 +142,8 @@ pipeline {
                     'deploy on k8s': {
                         script {
                             withKubeCredentials(kubectlCredentials: [[ credentialsId: 'kubernetes', namespace: 'ms' ]]) {
-                                sh 'kubectl get ns' 
+                                sh 'kubectl get ns'
+                                sh 'kubectl create namespace ms'
                                 sh 'kubectl apply -f kubernetes/yamlfile'
                             }
                         }
