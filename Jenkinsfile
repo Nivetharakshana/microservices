@@ -57,13 +57,13 @@ pipeline {
                                     -D sonar.projectVersion=1.0-SNAPSHOT \
                                     -D sonar.sources=. \
                                     -D sonar.login=admin \
-                                    -D sonar.password=admin1234 \
+                                    -D sonar.password=admin123 \
                                     -D sonar.projectKey=project \
                                     -D sonar.projectName=wishlist-py \
                                     -D sonar.inclusions=index.py \
                                     -D sonar.sourceEncoding=UTF-8 \
                                     -D sonar.language=python \
-                                    -D sonar.host.url=http://15.206.186.80/:9000/"""
+                                    -D sonar.host.url=http://54.254.37.137/:9000/"""
                                 }
                             }
                         }
